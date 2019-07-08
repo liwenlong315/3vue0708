@@ -16,33 +16,21 @@ export const reqCategorys = () => ajax({
 })
 
 // 根据经纬度获取商铺列表
-export const reqShops = ({
-  latitude,
-  longitude
-}) => ajax({
+export const reqShops = ({latitude, longitude}) => ajax({
   method: 'GET',
   url: BASE + '/shops',
-  params: {
-    latitude,
-    longitude
-  }
+  params: { latitude, longitude }
 })
 
 // 发送短信验证码
 export const reqSendCode = (phone) => ajax({
   method: 'GET',
   url: BASE + '/sendcode',
-  params: {
-    phone
-  }
+  params: { phone }
 })
 
 // 用户名密码登陆
-export const reqPwdLogin = ({
-  name,
-  pwd,
-  captcha
-}) => ajax({
+export const reqPwdLogin = ({ name, pwd, captcha }) => ajax({
   method: 'POST',
   url: BASE + '/login_pwd',
   data: {
