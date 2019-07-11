@@ -9,7 +9,9 @@
 import axios from 'axios'
 // const qs = require('qs')
 import qs from 'qs'
-import { Toast } from 'mint-ui'
+import {
+  Toast
+} from 'mint-ui'
 
 import store from '../vuex/store'
 import router from '../router'
@@ -20,14 +22,19 @@ axios.defaults.timeout = 20000 // 20s
 // 添加请求拦截器
 axios.interceptors.request.use((config) => {
 
-  const {method, data} = config  
+  const {
+    method,
+    data
+  } = config
   // 如果是携带数据的post请求, 进行处理
-  if (method.toLowerCase()==='post' && data && typeof data==='object') {
+  if (method.toLowerCase() === 'post' && data && typeof data === 'object') {
     config.data = qs.stringify(data) // {name: 'tom', pwd: '123'} ==> name=tom&pwd=123
   }
 
   // 如果请求配置标识了需要携带token
-  const { needToken } = config.headers
+  const {
+    needToken
+  } = config.headers
   if (needToken) {
     // 取出state中的token
     const token = store.state.user.token
@@ -51,20 +58,20 @@ axios.interceptors.request.use((config) => {
 axios.interceptors.response.use(response => {
   // 返回response中的data数据, 这样请求成功的数据就是data了
   return response.data
-}, error => {// 请求异常
+}, error => { // 请求异常
 
   // 发请求前的异常
   if (!error.response) {
-    if (error.status===401) { // 发需要授权的请求前发现没有token(没有登陆)
+    if (error.status === 401) { // 发需要授权的请求前发现没有token(没有登陆)
       // 如果当前没在登陆界面
-      if (router.currentRoute.path!=='/login') {
+      if (router.currentRoute.path !== '/login') {
         router.replace('/login')
         Toast(error.message)
       } else {
         console.log('没有token, 请求前取消的请求, 已在login, 不需要跳转')
       }
     }
-  // 发请求后的异常
+    // 发请求后的异常
   } else {
     const status = error.response.status
     const msg = error.message
@@ -77,20 +84,20 @@ axios.interceptors.response.use(response => {
       } else {
         console.log('token过期的请求, 已在login')
       }
-      
+
     } else if (status === 404) {
       Toast('请求的资源不存在')
     } else {
       Toast('请求异常: ' + msg)
     }
   }
-  
 
-  
+
+
 
   // return error
   // return Promise.reject(error)
-  return new Promise(() => {})  // 中断promise链
+  return new Promise(() => {}) // 中断promise链
 })
 
 export default axios
